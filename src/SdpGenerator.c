@@ -436,6 +436,12 @@ static PSDP_OPTION getAttributesList(char*urlSafeAddr) {
             // If not using slicing, we request 1 slice per frame
             slicesPerFrame = 1;
         }
+        /* AV1-only: do not inherit HEVC slice count from client caps. webOS AV1
+         * is not a sliced HEVC decoder; leaking 4–8 slices into Sunshine can
+         * produce a tiled bitstream NDL/SMP mishandles. HEVC/H.264 unchanged. */
+        if (NegotiatedVideoFormat & VIDEO_FORMAT_MASK_AV1) {
+            slicesPerFrame = 1;
+        }
         snprintf(payloadStr, sizeof(payloadStr), "%d", slicesPerFrame);
         err |= addAttributeString(&optionHead, "x-nv-video[0].videoEncoderSlicesPerFrame", payloadStr);
 
