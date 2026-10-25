@@ -100,6 +100,18 @@ typedef struct _STREAM_CONFIGURATION {
     // in /launch and /resume requests.
     char remoteInputAesKey[16];
     char remoteInputAesIv[16];
+
+    // If non-zero, the speed in Mbps of the client's wired link to the host.
+    // Sent to Sunshine-family hosts as x-ss-video[0].pyrowaveLinkMbps, which
+    // Rubylight uses to cap its packet pacing at the client's port for every
+    // codec; despite the name it does not request PyroWave. Leave it zero when
+    // the link is wireless or the speed is unknown.
+    int clientLinkMbps;
+
+    // If non-zero, the client's route to the host is Wi-Fi or cellular. Sent to
+    // Sunshine-family hosts as x-rl-video[0].clientWireless, which Rubylight
+    // uses to pace video for a wireless link from the first frame.
+    int clientWireless;
 } STREAM_CONFIGURATION, *PSTREAM_CONFIGURATION;
 
 // Use this function to zero the stream configuration when allocated on the stack or heap
