@@ -309,6 +309,15 @@ static PSDP_OPTION getAttributesList(char*urlSafeAddr) {
         else {
             err |= addAttributeString(&optionHead, "x-ss-video[0].chromaSamplingType", "0");
         }
+
+        // Link hints for Rubylight's packet pacing. Hosts that don't know these keys ignore them.
+        if (StreamConfig.clientLinkMbps > 0) {
+            snprintf(payloadStr, sizeof(payloadStr), "%d", StreamConfig.clientLinkMbps);
+            err |= addAttributeString(&optionHead, "x-ss-video[0].pyrowaveLinkMbps", payloadStr);
+        }
+        if (StreamConfig.clientWireless) {
+            err |= addAttributeString(&optionHead, "x-rl-video[0].clientWireless", "1");
+        }
     }
 
     snprintf(payloadStr, sizeof(payloadStr), "%d", StreamConfig.width);
